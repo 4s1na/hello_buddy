@@ -33,6 +33,49 @@ h1 { font-size: 20px; color: #ff69b4; margin: 5px 0; }
 }
 h2 { font-size: 14px; margin-top: 0; color: var(--secondary); }
 
+/* NEW: Character Grid Styles */
+.char-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.char-btn {
+  background: white;
+  border: 2px solid transparent; /* Invisible border normally */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.char-btn img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  pointer-events: none; /* Ensures clicking image clicks button */
+}
+
+.char-btn:hover {
+  transform: scale(1.1);
+  background: #fff0f5;
+}
+
+/* When a character is selected */
+.char-btn.selected {
+  border-color: #ff69b4;
+  background: #ffe4e1;
+  transform: scale(1.1);
+  box-shadow: 0 0 8px #ff69b4;
+}
+
 /* Inputs */
 .input-group { display: flex; gap: 5px; }
 input {

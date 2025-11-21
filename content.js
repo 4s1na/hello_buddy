@@ -15,44 +15,45 @@ const MESSAGES = [
   { text: "Don't forget to blink!", type: "health" }
 ];
 
-// 1. Listen for background trigger
 chrome.runtime.onMessage.addListener((request) => {
   if (request.action === 'triggerPopup') {
-    console.log("Trigger received from background timer!");
     createBuddyPopup();
   }
 });
 
-// 2. Check settings on page load
-console.log("Sanrio Buddy: Checking settings..."); 
+// Check settings on page load
 chrome.storage.local.get(['enableQuestions'], (res) => {
-  console.log("Sanrio Buddy: Switch is currently set to ->", res.enableQuestions);
-  
   if (res.enableQuestions) {
-    console.log("Sanrio Buddy: Switch is ON! Spawning character...");
     createBuddyPopup();
-  } else {
-    console.log("Sanrio Buddy: Switch is OFF. Staying hidden.");
   }
 });
 
-// 👇 THIS IS THE MISSING PART YOU NEED 👇
 function createBuddyPopup() {
-  // Prevent duplicates
   if (document.querySelector('.sanrio-buddy-container')) return;
 
-  // Select Random Content
-  const randomChar = CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
-  const randomMsg = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
-  const imgUrl = chrome.runtime.getURL(`images/${randomChar}`);
+  // 1. GET SAVED CHARACTER AND TASKS
+  chrome.storage.local.get(['selectedChar', 'tasks'], (result) => {
+    
+    // Determine Image
+    let charImage;
+    const userChoice = result.selectedChar || 'random';
 
-  // Check for unfinished tasks
-  chrome.storage.local.get(['tasks'], (result) => {
+    if (userChoice === 'random') {
+      // Pick random from array
+      charImage = CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
+    } else {
+      // Use the specific choice
+      charImage = userChoice;
+    }
+
+    const imgUrl = chrome.runtime.getURL(`images/${charImage}`);
+    
+    // Determine Message (Task logic)
+    const randomMsg = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
     let displayText = randomMsg.text;
     let tasks = result.tasks || [];
     const activeTasks = tasks.filter(t => !t.completed);
 
-    // 30% chance to ask about a specific task
     if (activeTasks.length > 0 && Math.random() < 0.3) {
       const task = activeTasks[Math.floor(Math.random() * activeTasks.length)];
       const taskName = task.text || task; 
@@ -76,7 +77,6 @@ function createBuddyPopup() {
 
     document.body.appendChild(container);
 
-    // Event Listeners
     container.querySelector('#buddy-yes').addEventListener('click', () => {
       closePopup(container);
     });
@@ -85,7 +85,6 @@ function createBuddyPopup() {
       closePopup(container);
     });
 
-    // Auto close after 15 seconds
     setTimeout(() => closePopup(container), 15000);
   });
 }

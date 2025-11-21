@@ -6,20 +6,46 @@ document.addEventListener('DOMContentLoaded', function() {
   const doneSection = document.getElementById('done-section');
   const emptyMsg = document.getElementById('empty-msg');
   const enableQuestions = document.getElementById('enable-questions');
+  const charButtons = document.querySelectorAll('.char-btn'); // Select all character buttons
 
   // Load saved data
-  chrome.storage.local.get(['tasks', 'enableQuestions'], function(result) {
-    // Ensure tasks is an array of objects, even if it was old string data
+  chrome.storage.local.get(['tasks', 'enableQuestions', 'selectedChar'], function(result) {
     let tasks = result.tasks || [];
-    
-    // Migration fix: If user had old tasks (just strings), convert them to objects
     if (tasks.length > 0 && typeof tasks[0] === 'string') {
       tasks = tasks.map(t => ({ text: t, completed: false }));
     }
-
     renderTasks(tasks);
+    
     enableQuestions.checked = result.enableQuestions || false;
+
+    // Highlight the saved character (or Random if none saved)
+    const savedChar = result.selectedChar || 'random';
+    updateCharSelection(savedChar);
   });
+
+  // --- CHARACTER SELECTION LOGIC ---
+  charButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const charName = btn.getAttribute('data-char');
+      
+      // 1. Save to storage
+      chrome.storage.local.set({ selectedChar: charName });
+      
+      // 2. Update UI (highlight the button)
+      updateCharSelection(charName);
+    });
+  });
+
+  function updateCharSelection(selectedName) {
+    charButtons.forEach(btn => {
+      if (btn.getAttribute('data-char') === selectedName) {
+        btn.classList.add('selected');
+      } else {
+        btn.classList.remove('selected');
+      }
+    });
+  }
+  // --------------------------------
 
   // Add Task Event
   addTaskBtn.addEventListener('click', addTask);
@@ -27,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.key === 'Enter') addTask();
   });
 
-  // Toggle Settings
   enableQuestions.addEventListener('change', function() {
     chrome.storage.local.set({ enableQuestions: enableQuestions.checked });
   });
@@ -37,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (taskText) {
       chrome.storage.local.get(['tasks'], function(result) {
         let tasks = result.tasks || [];
-        // Add new task object
         tasks.push({ text: taskText, completed: false });
         saveAndRender(tasks);
         taskInput.value = '';
@@ -48,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
   function toggleTask(index) {
     chrome.storage.local.get(['tasks'], function(result) {
       const tasks = result.tasks || [];
-      // Flip the completed status
       tasks[index].completed = !tasks[index].completed;
       saveAndRender(tasks);
     });
@@ -70,25 +93,21 @@ document.addEventListener('DOMContentLoaded', function() {
   function renderTasks(tasks) {
     taskList.innerHTML = '';
     doneList.innerHTML = '';
-    
     let activeCount = 0;
     let doneCount = 0;
 
     tasks.forEach((task, index) => {
       const li = document.createElement('li');
-      li.textContent = task.text || task; // Handle legacy data
+      li.textContent = task.text || task;
 
-      // Create Controls Div
       const controls = document.createElement('div');
       controls.className = 'task-controls';
 
-      // Check Button
       const checkBtn = document.createElement('button');
       checkBtn.innerHTML = '✓';
       checkBtn.className = 'check-btn';
       checkBtn.onclick = () => toggleTask(index);
 
-      // Delete Button
       const delBtn = document.createElement('button');
       delBtn.textContent = 'X';
       delBtn.className = 'delete-btn';
@@ -100,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
       if (task.completed) {
         li.classList.add('done-task');
-        // For done tasks, the check button can act as an "Undo"
         checkBtn.style.background = '#ccc'; 
         doneList.appendChild(li);
         doneCount++;
@@ -110,7 +128,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
 
-    // Show/Hide Empty Message
     if (activeCount === 0) {
       emptyMsg.style.display = 'block';
       if(doneCount > 0) emptyMsg.textContent = "All done! Great job! 💖";
@@ -119,7 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
       emptyMsg.style.display = 'none';
     }
 
-    // Show/Hide Done Section
     if (doneCount > 0) {
       doneSection.style.display = 'block';
     } else {
