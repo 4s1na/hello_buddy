@@ -15,7 +15,7 @@ const MESSAGES = [
   { text: "Don't forget to blink!", type: "health" }
 ];
 
-// 1. Listen for timer triggers from background (The 20 min check-in)
+// 1. Listen for timer triggers
 chrome.runtime.onMessage.addListener((request) => {
   if (request.action === 'triggerPopup') {
     console.log("Trigger received! Waking up buddy...");
@@ -26,13 +26,10 @@ chrome.runtime.onMessage.addListener((request) => {
 // 2. Check settings on page load
 chrome.storage.local.get(['enableQuestions'], (res) => {
   if (res.enableQuestions) {
-    // Step A: Build the house
     buildHouseWidget();
-    
-    // Step B: Say hello immediately! (This was missing before)
     setTimeout(() => {
       showBubbleMessage();
-    }, 1000); // Wait 1 second after building house to pop up
+    }, 1000);
   }
 });
 
@@ -51,14 +48,17 @@ function buildHouseWidget() {
       charImage = userChoice;
     }
 
+    // ✅ FIX: Get the correct URL for the text box image here
+    const boxUrl = chrome.runtime.getURL('images/textbox.png');
     const charUrl = chrome.runtime.getURL(`images/${charImage}`);
     const houseUrl = chrome.runtime.getURL(`images/house.png`); 
 
     const container = document.createElement('div');
     container.className = 'sanrio-house-container';
     
+    // ✅ FIX: Apply the background image directly in the HTML style
     container.innerHTML = `
-      <div class="buddy-bubble" id="sanrio-bubble">
+      <div class="buddy-bubble" id="sanrio-bubble" style="background-image: url('${boxUrl}');">
         <p id="sanrio-text">Hello!</p>
         <div class="buddy-buttons">
           <button id="buddy-yes">Yes!</button>
@@ -84,11 +84,9 @@ function showBubbleMessage() {
   
   if (!bubble || !textEl) return; 
 
-  // 1. Pick Message
   const randomMsg = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
   let displayText = randomMsg.text;
 
-  // 2. Check Tasks
   chrome.storage.local.get(['tasks'], (result) => {
     let tasks = result.tasks || [];
     const activeTasks = tasks.filter(t => !t.completed);
@@ -98,12 +96,10 @@ function showBubbleMessage() {
       displayText = `Have you finished: "${task.text || task}" yet?`;
     }
 
-    // 3. Show EVERYTHING
     textEl.textContent = displayText;
-    bubble.classList.add('visible'); // Show bubble
-    charEl.classList.add('peek-active'); // Force buddy to come out of house
+    bubble.classList.add('visible'); 
+    charEl.classList.add('peek-active'); 
 
-    // Auto hide after 15 seconds
     setTimeout(hideBubble, 15000);
   });
 }
@@ -112,5 +108,5 @@ function hideBubble() {
   const bubble = document.getElementById('sanrio-bubble');
   const charEl = document.getElementById('sanrio-char');
   if (bubble) bubble.classList.remove('visible');
-  if (charEl) charEl.classList.remove('peek-active'); // Buddy goes back in
+  if (charEl) charEl.classList.remove('peek-active');
 }
