@@ -1,8 +1,9 @@
+console.log("hello buddy script has loaded 🎀");
 const CHARACTERS = [
   'hellokitty.png', 
   'kuromi.png', 
   'cinnamoroll.png', 
-  'mymelody.png'
+  'pompompurin.png'
 ];
 
 const MESSAGES = [
