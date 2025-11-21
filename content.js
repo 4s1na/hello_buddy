@@ -15,7 +15,7 @@ const MESSAGES = [
   { text: "Don't forget to blink!", type: "health" }
 ];
 
-// 1. Listen for timer triggers from background
+// 1. Listen for background trigger
 chrome.runtime.onMessage.addListener((request) => {
   if (request.action === 'triggerPopup') {
     console.log("Trigger received from background timer!");
@@ -23,7 +23,7 @@ chrome.runtime.onMessage.addListener((request) => {
   }
 });
 
-// 2. Check settings immediately on page load
+// 2. Check settings on page load
 console.log("Sanrio Buddy: Checking settings..."); 
 chrome.storage.local.get(['enableQuestions'], (res) => {
   console.log("Sanrio Buddy: Switch is currently set to ->", res.enableQuestions);
@@ -36,7 +36,7 @@ chrome.storage.local.get(['enableQuestions'], (res) => {
   }
 });
 
-// 3. THE IMPORTANT FUNCTION (Do not delete this part!)
+// 👇 THIS IS THE MISSING PART YOU NEED 👇
 function createBuddyPopup() {
   // Prevent duplicates
   if (document.querySelector('.sanrio-buddy-container')) return;
@@ -76,7 +76,7 @@ function createBuddyPopup() {
 
     document.body.appendChild(container);
 
-    // Event Listeners for buttons
+    // Event Listeners
     container.querySelector('#buddy-yes').addEventListener('click', () => {
       closePopup(container);
     });
