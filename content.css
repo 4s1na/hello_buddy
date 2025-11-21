@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+
+.sanrio-buddy-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2147483647; /* Maximum z-index to sit on top of everything */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: 'Fredoka', sans-serif;
+  pointer-events: none; /* Let clicks pass through around the image */
+}
+
+.buddy-character {
+  width: 120px;
+  height: auto;
+  filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.3s;
+}
+
+.buddy-character:hover {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.buddy-bubble {
+  background: white;
+  padding: 15px;
+  border-radius: 20px;
+  border-bottom-right-radius: 0;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+  max-width: 200px;
+  text-align: center;
+  border: 2px solid #ffb7c5;
+  pointer-events: auto;
+  animation: float 3s ease-in-out infinite;
+}
+
+.buddy-bubble p {
+  margin: 0 0 10px 0;
+  color: #5d4c5d;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.buddy-buttons button {
+  background: #ffb7c5;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 15px;
+  color: white;
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 12px;
+  margin: 0 3px;
+}
+
+.buddy-buttons button:hover {
+  background: #ff69b4;
+}
+
+/* Animations */
+.slide-in {
+  animation: slideIn 0.5s forwards;
+}
+
+.slide-out {
+  animation: slideOut 0.5s forwards;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(150%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0); }
+  to { transform: translateX(150%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}

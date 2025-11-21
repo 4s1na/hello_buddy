@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;500&display=swap');
+
+:root {
+  --primary: #ffb7c5; /* Cherry Blossom */
+  --secondary: #e0bbe4; /* Lavender */
+  --text: #5d4c5d;
+  --bg: #fff0f5;
+}
+
+body {
+  font-family: 'Fredoka', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  width: 320px;
+  margin: 0;
+  padding: 15px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+.mascot-header {
+  width: 60px;
+  animation: bounce 2s infinite;
+}
+h1 { font-size: 20px; color: #ff69b4; margin: 5px 0; }
+
+/* Cards */
+.card {
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 15px rgba(255, 182, 193, 0.4);
+  border: 2px solid white;
+}
+h2 { font-size: 14px; margin-top: 0; color: var(--secondary); }
+
+/* Inputs */
+.input-group { display: flex; gap: 5px; }
+input {
+  flex-grow: 1;
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+  padding: 8px;
+  outline: none;
+  font-family: 'Fredoka', sans-serif;
+}
+button {
+  background: var(--primary);
+  border: none;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+button:hover { transform: scale(1.05); }
+
+/* Task List */
+ul { list-style: none; padding: 0; margin: 0; }
+li {
+  background: #fdf;
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+.delete-btn {
+  background: #ff8da1;
+  font-size: 10px;
+  padding: 4px 8px;
+  margin-left: 5px;
+}
+
+#empty-msg { text-align: center; font-size: 12px; color: #aaa; display: none; }
+
+/* Animations */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
