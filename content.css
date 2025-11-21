@@ -15,35 +15,30 @@
   pointer-events: none;
 }
 
-/* Speech Bubble - PIXEL ART VERSION */
+/* Speech Bubble - FIXED ALIGNMENT */
 .buddy-bubble {
   position: absolute;
-  bottom: 230px; /* MOVED UP (Was 130px) - Now it won't cover the buddy */
-  right: -20px;  /* Shifted right slightly to center over house */
+  bottom: 240px; 
+  right: -25px; /* Shifted right to center better */
   
   /* Image Settings */
   background-image: url('images/textbox.png');
-  background-size: 100% 100%;
+  background-size: 100% 100%; /* Forces image to stretch to the full height */
   background-repeat: no-repeat;
-  background-color: transparent; /* Removes the white box */
+  background-color: transparent;
   
-  /* Size & Spacing */
-  width: 200px;
-  min-height: 80px;
-  padding: 20px 25px 35px 25px; /* Adjusted padding to fit text inside image */
+  /* Size & Spacing - ADJUSTED FOR FIT */
+  width: 220px;
+  height: 110px; /* FIXED HEIGHT to prevent squashing */
+  padding: 35px 20px 25px 20px; /* More top padding to push text down */
   
   /* Alignment */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* vertically align */
   
-  /* Reset old borders */
   border: none !important;
-  border-radius: 0;
-  box-shadow: none;
-  
-  /* Animation States */
   opacity: 0;
   transform: scale(0.8);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -56,30 +51,33 @@
   transform: scale(1);
 }
 
+/* Text Styling */
 .buddy-bubble p {
-  margin: 0 0 5px 0;
-  color: #000; /* Black text is easier to read on pixel art */
-  font-size: 12px;
+  margin: 0 0 8px 0;
+  color: #000; 
+  font-size: 13px;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.2; /* Tighten text slightly */
   text-align: center;
+  width: 100%;
 }
 
+/* Buttons */
 .buddy-buttons {
   display: flex;
-  gap: 8px;
-  margin-top: 2px;
+  gap: 10px;
+  margin-top: 0;
 }
 
 .buddy-buttons button {
   background: white;
   border: 2px solid #5d4c5d;
-  padding: 4px 8px;
+  padding: 5px 12px;
   border-radius: 8px;
   color: #5d4c5d;
   cursor: pointer;
   font-family: 'Fredoka', sans-serif;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: bold;
 }
 
@@ -92,7 +90,7 @@
   right: 35px;
   width: 80px;
   height: auto;
-  z-index: 5; /* BEHIND the house */
+  z-index: 5;
   transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   pointer-events: auto;
 }
@@ -104,20 +102,17 @@
   right: 0;
   width: 150px;
   height: auto;
-  z-index: 10; /* IN FRONT of buddy */
+  z-index: 10;
   filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
   pointer-events: auto;
   cursor: pointer;
 }
 
-/* ✨ INTERACTION LOGIC ✨ */
-
-/* 1. Hovering the house makes buddy peek */
+/* Interaction */
 .sanrio-house-container:hover .buddy-character {
-  transform: translateY(-130px); /* JUMP HIGHER (Was -80px) */
+  transform: translateY(-140px);
 }
 
-/* 2. Timer/Check-in makes buddy peek automatically */
 .buddy-character.peek-active {
-  transform: translateY(-130px); /* JUMP HIGHER (Was -80px) */
+  transform: translateY(-140px);
 }
