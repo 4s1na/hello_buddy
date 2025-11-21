@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
 
-/* The invisible box that holds everything */
+/* Container */
 .sanrio-house-container {
   position: fixed;
   bottom: 10px;
@@ -12,13 +12,13 @@
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-end;
-  pointer-events: none; /* Let clicks pass through empty space */
+  pointer-events: none;
 }
 
-/* The Speech Bubble (Hidden by default) */
+/* Speech Bubble */
 .buddy-bubble {
   position: absolute;
-  bottom: 140px; /* Floats above the house */
+  bottom: 150px; /* Moved higher so it doesn't overlap house */
   right: 0;
   background: white;
   padding: 15px;
@@ -28,14 +28,13 @@
   width: 180px;
   text-align: center;
   border: 2px solid #ffb7c5;
-  opacity: 0; /* Invisible normally */
+  opacity: 0;
   transform: scale(0.8);
   transition: all 0.3s ease;
   pointer-events: auto;
-  z-index: 20; /* Highest layer */
+  z-index: 20;
 }
 
-/* State: When bubble is active */
 .buddy-bubble.visible {
   opacity: 1;
   transform: scale(1);
@@ -61,19 +60,19 @@
 
 .buddy-buttons button:hover { background: #ff69b4; }
 
-/* The Character (Hidden behind the house) */
+/* The Character */
 .buddy-character {
   position: absolute;
-  bottom: 10px; /* Starts low */
-  right: 30px; /* Center it relative to house */
-  width: 90px;
+  bottom: 10px;
+  right: 35px; /* Centered in house door */
+  width: 80px; /* Adjusted size to fit in door */
   height: auto;
   z-index: 5; /* BEHIND the house */
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy animation */
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   pointer-events: auto;
 }
 
-/* The House (Always in front) */
+/* The House */
 .house-img {
   position: absolute;
   bottom: 0;
@@ -86,9 +85,14 @@
   cursor: pointer;
 }
 
+/* ✨ INTERACTION LOGIC ✨ */
+
+/* 1. Hovering the house makes buddy peek */
 .sanrio-house-container:hover .buddy-character {
-  transform: translateY(-60px); /* Moves UP 60 pixels */
+  transform: translateY(-80px); /* Jump higher! */
 }
+
+/* 2. Timer/Check-in makes buddy peek automatically */
 .buddy-character.peek-active {
-  transform: translateY(-60px);
+  transform: translateY(-100px);
 }

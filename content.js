@@ -15,7 +15,7 @@ const MESSAGES = [
   { text: "Don't forget to blink!", type: "health" }
 ];
 
-// 1. Listen for timer triggers from background
+// 1. Listen for timer triggers from background (The 20 min check-in)
 chrome.runtime.onMessage.addListener((request) => {
   if (request.action === 'triggerPopup') {
     console.log("Trigger received! Waking up buddy...");
@@ -23,20 +23,24 @@ chrome.runtime.onMessage.addListener((request) => {
   }
 });
 
-// 2. Check settings on page load -> Build the House immediately
+// 2. Check settings on page load
 chrome.storage.local.get(['enableQuestions'], (res) => {
   if (res.enableQuestions) {
+    // Step A: Build the house
     buildHouseWidget();
+    
+    // Step B: Say hello immediately! (This was missing before)
+    setTimeout(() => {
+      showBubbleMessage();
+    }, 1000); // Wait 1 second after building house to pop up
   }
 });
 
 // --- CORE FUNCTIONS ---
 
 function buildHouseWidget() {
-  // If house already exists, don't build another one
   if (document.querySelector('.sanrio-house-container')) return;
 
-  // 1. Determine Character
   chrome.storage.local.get(['selectedChar'], (result) => {
     let charImage;
     const userChoice = result.selectedChar || 'random';
@@ -48,9 +52,8 @@ function buildHouseWidget() {
     }
 
     const charUrl = chrome.runtime.getURL(`images/${charImage}`);
-    const houseUrl = chrome.runtime.getURL(`images/house.png`); // MAKE SURE YOU HAVE THIS IMAGE!
+    const houseUrl = chrome.runtime.getURL(`images/house.png`); 
 
-    // 2. Build HTML Structure
     const container = document.createElement('div');
     container.className = 'sanrio-house-container';
     
@@ -69,7 +72,6 @@ function buildHouseWidget() {
 
     document.body.appendChild(container);
 
-    // 3. Add Button Listeners (To close bubble)
     container.querySelector('#buddy-yes').addEventListener('click', hideBubble);
     container.querySelector('#buddy-later').addEventListener('click', hideBubble);
   });
@@ -80,13 +82,13 @@ function showBubbleMessage() {
   const textEl = document.getElementById('sanrio-text');
   const charEl = document.getElementById('sanrio-char');
   
-  if (!bubble || !textEl) return; // If widget isn't built yet
+  if (!bubble || !textEl) return; 
 
-  // 1. Pick a Message
+  // 1. Pick Message
   const randomMsg = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
   let displayText = randomMsg.text;
 
-  // 2. Check Tasks (30% chance)
+  // 2. Check Tasks
   chrome.storage.local.get(['tasks'], (result) => {
     let tasks = result.tasks || [];
     const activeTasks = tasks.filter(t => !t.completed);
@@ -96,12 +98,10 @@ function showBubbleMessage() {
       displayText = `Have you finished: "${task.text || task}" yet?`;
     }
 
-    // 3. Update Text and Show
+    // 3. Show EVERYTHING
     textEl.textContent = displayText;
-    bubble.classList.add('visible');
-    
-    // Force Buddy to Peek (Add CSS class)
-    charEl.classList.add('peek-active');
+    bubble.classList.add('visible'); // Show bubble
+    charEl.classList.add('peek-active'); // Force buddy to come out of house
 
     // Auto hide after 15 seconds
     setTimeout(hideBubble, 15000);
@@ -112,5 +112,5 @@ function hideBubble() {
   const bubble = document.getElementById('sanrio-bubble');
   const charEl = document.getElementById('sanrio-char');
   if (bubble) bubble.classList.remove('visible');
-  if (charEl) charEl.classList.remove('peek-active'); // Buddy goes back inside
+  if (charEl) charEl.classList.remove('peek-active'); // Buddy goes back in
 }
