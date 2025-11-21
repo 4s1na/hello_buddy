@@ -3,6 +3,7 @@
 :root {
   --primary: #ffb7c5; /* Cherry Blossom */
   --secondary: #e0bbe4; /* Lavender */
+  --success: #b0f2c2; /* Pastel Green */
   --text: #5d4c5d;
   --bg: #fff0f5;
 }
@@ -17,14 +18,8 @@ body {
 }
 
 /* Header */
-.header {
-  text-align: center;
-  margin-bottom: 15px;
-}
-.mascot-header {
-  width: 60px;
-  animation: bounce 2s infinite;
-}
+.header { text-align: center; margin-bottom: 15px; }
+.mascot-header { width: 60px; animation: bounce 2s infinite; }
 h1 { font-size: 20px; color: #ff69b4; margin: 5px 0; }
 
 /* Cards */
@@ -59,8 +54,9 @@ button {
 }
 button:hover { transform: scale(1.05); }
 
-/* Task List */
+/* Task List Styles */
 ul { list-style: none; padding: 0; margin: 0; }
+
 li {
   background: #fdf;
   margin: 5px 0;
@@ -70,15 +66,64 @@ li {
   justify-content: space-between;
   align-items: center;
   font-size: 14px;
+  transition: all 0.3s ease;
 }
+
+/* Controls inside the task (Check & Delete) */
+.task-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.check-btn {
+  background: var(--success);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .delete-btn {
   background: #ff8da1;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
   font-size: 10px;
-  padding: 4px 8px;
-  margin-left: 5px;
+}
+
+/* Done List Specific Styles */
+.done-container {
+  background: rgba(255, 255, 255, 0.6); /* Slightly see-through */
+}
+
+.done-task {
+  background: #eee !important;
+  color: #aaa;
+  text-decoration: line-through;
 }
 
 #empty-msg { text-align: center; font-size: 12px; color: #aaa; display: none; }
+
+/* Switch */
+.switch-container { display: flex; align-items: center; gap: 10px; font-size: 12px; cursor: pointer; }
+.switch-container input { display: none; }
+.checkmark {
+  width: 15px; height: 15px;
+  border: 2px solid var(--primary);
+  border-radius: 3px;
+  display: inline-block;
+  position: relative;
+}
+input:checked + .checkmark { background: var(--primary); }
 
 /* Animations */
 @keyframes bounce {

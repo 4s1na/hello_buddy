@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sanrio Buddy</title>
+  <title>hello buddy - ur desktop buddy</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="header">
     <img src="images/hellokitty.png" class="mascot-header">
-    <h1>Hello Buddy!</h1>
+    <h1>𐙚⋆.˚ hello buddy 𐙚⋆.˚</h1>
   </div>
 
   <div class="card">
-    <h2>✨ New Task</h2>
+    <h2>✨ ur new task</h2>
     <div class="input-group">
       <input type="text" id="task-input" placeholder="What needs doing?">
       <button id="add-task-btn">+</button>
@@ -20,17 +20,23 @@
   </div>
 
   <div class="card task-container">
-    <h2>📝 To Do List</h2>
+    <h2>📝 here's your to-do list:</h2>
     <ul id="task-list">
       </ul>
-    <div id="empty-msg">No tasks yet! Great job! 💖</div>
+    <div id="empty-msg">no tasks yet!</div>
+  </div>
+
+  <div class="card done-container" id="done-section" style="display:none;">
+    <h2>what you have done so far: </h2>
+    <ul id="done-list">
+      </ul>
   </div>
 
   <div class="footer">
     <label class="switch-container">
       <input type="checkbox" id="enable-questions">
       <span class="checkmark"></span>
-      Enable Buddy Check-ins
+      enable buddy check-ins
     </label>
   </div>
   <script src="popup.js"></script>
