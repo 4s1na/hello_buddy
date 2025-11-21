@@ -1,49 +1,50 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
 
-.sanrio-buddy-container {
+/* The invisible box that holds everything */
+.sanrio-house-container {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 2147483647; /* Maximum z-index to sit on top of everything */
+  bottom: 10px;
+  right: 10px;
+  width: 160px; 
+  height: 180px;
+  z-index: 2147483647;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  font-family: 'Fredoka', sans-serif;
-  pointer-events: none; /* Let clicks pass through around the image */
+  justify-content: flex-end;
+  pointer-events: none; /* Let clicks pass through empty space */
 }
 
-.buddy-character {
-  width: 120px;
-  height: auto;
-  filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
-  cursor: pointer;
-  pointer-events: auto;
-  transition: transform 0.3s;
-}
-
-.buddy-character:hover {
-  transform: scale(1.1) rotate(-5deg);
-}
-
+/* The Speech Bubble (Hidden by default) */
 .buddy-bubble {
+  position: absolute;
+  bottom: 140px; /* Floats above the house */
+  right: 0;
   background: white;
   padding: 15px;
   border-radius: 20px;
   border-bottom-right-radius: 0;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  margin-bottom: 10px;
-  max-width: 200px;
+  width: 180px;
   text-align: center;
   border: 2px solid #ffb7c5;
+  opacity: 0; /* Invisible normally */
+  transform: scale(0.8);
+  transition: all 0.3s ease;
   pointer-events: auto;
-  animation: float 3s ease-in-out infinite;
+  z-index: 20; /* Highest layer */
+}
+
+/* State: When bubble is active */
+.buddy-bubble.visible {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .buddy-bubble p {
   margin: 0 0 10px 0;
   color: #5d4c5d;
   font-size: 14px;
-  line-height: 1.4;
 }
 
 .buddy-buttons button {
@@ -58,30 +59,36 @@
   margin: 0 3px;
 }
 
-.buddy-buttons button:hover {
-  background: #ff69b4;
+.buddy-buttons button:hover { background: #ff69b4; }
+
+/* The Character (Hidden behind the house) */
+.buddy-character {
+  position: absolute;
+  bottom: 10px; /* Starts low */
+  right: 30px; /* Center it relative to house */
+  width: 90px;
+  height: auto;
+  z-index: 5; /* BEHIND the house */
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy animation */
+  pointer-events: auto;
 }
 
-/* Animations */
-.slide-in {
-  animation: slideIn 0.5s forwards;
+/* The House (Always in front) */
+.house-img {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 150px;
+  height: auto;
+  z-index: 10; /* IN FRONT of buddy */
+  filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
+  pointer-events: auto;
+  cursor: pointer;
 }
 
-.slide-out {
-  animation: slideOut 0.5s forwards;
+.sanrio-house-container:hover .buddy-character {
+  transform: translateY(-60px); /* Moves UP 60 pixels */
 }
-
-@keyframes slideIn {
-  from { transform: translateX(150%); }
-  to { transform: translateX(0); }
-}
-
-@keyframes slideOut {
-  from { transform: translateX(0); }
-  to { transform: translateX(150%); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+.buddy-character.peek-active {
+  transform: translateY(-60px);
 }
